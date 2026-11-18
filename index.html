@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#6f1d2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>月配息試算器</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css?v=22">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar no-print">
+      <div><p class="eyebrow">投資現金流規劃</p><h1>多標的月配息試算器</h1></div>
+      <button id="openAllocationBtn" class="primary compact" type="button">標的配置</button>
+    </header>
+
+    <section class="panel no-print" aria-labelledby="inputTitle">
+      <h2 id="inputTitle">試算條件</h2>
+      <div class="form-grid">
+        <label class="field wide"><span>投入金額（萬元，最低10萬元）</span><input id="amountTwd" type="number" inputmode="decimal" min="10" step="1" value="30"></label>
+        <label class="field wide"><span>商品費用</span><div class="inline-input customer-toggle-row"><select id="feePlan"><option value="ASVA">ASVA／AFVA</option><option value="NSVA">NSVA／NFVA</option><option value="DSVA">DSVA／DFVA</option><option value="KVA">KVA／KFVA</option></select><button id="existingCustomerBtn" class="toggle-btn" type="button" aria-pressed="false">舊客戶</button></div><small id="existingCustomerStatus">一般客戶費率</small></label>
+        <label class="field"><span>保單年度</span><select id="policyYear"><option value="1">第1年</option><option value="2">第2年起</option></select></label>
+        <label class="field"><span>繳費類型</span><select id="paymentType"><option value="first">第一次繳費</option><option value="renewal">續次繳費／既有契約</option></select></label>
+        <label class="field"><span>費率判定幣別</span><select id="feeCurrency"><option value="TWD">新台幣</option><option value="USD">美元</option></select></label>
+        <label class="field"><span>費率判定金額（原幣）</span><input id="feeBasisAmount" type="number" inputmode="decimal" min="0" step="1" value="300000"><small id="feeRuleStatus"></small></label>
+        <div class="field fee-result"><span>預計扣除商品費用</span><strong id="inputFeeAmount">NT$ 0</strong><small id="inputFeeDetail">依商品條件自動計算</small></div>
+        <div class="field fee-result"><span>每月管理費</span><strong id="inputManagementFee">—</strong><small id="managementFeeDetail">不從月配息中扣除</small></div>
+        <label class="field"><span>台銀美元即期賣出（申購）</span><input id="purchaseFxRate" type="number" inputmode="decimal" min="0.0001" step="0.0001"></label>
+        <label class="field"><span>台銀美元即期買入（配息）</span><div class="inline-input"><input id="dividendFxRate" type="number" inputmode="decimal" min="0.0001" step="0.0001"><button id="refreshFxBtn" type="button">更新</button></div><small id="fxStatus"></small></label>
+      </div>
+
+      <div class="selected-overview">
+        <div class="selected-overview-head"><h2>已選標的</h2><span id="selectedFundCount">2檔</span></div>
+        <div id="selectedFundSummary" class="selected-fund-summary"></div>
+      </div>
+      <p id="errorMessage" class="error" role="alert"></p>
+    </section>
+
+    <section id="report" class="report" aria-live="polite">
+      <div class="report-head">
+        <div><p class="eyebrow">多標的月配息規劃表</p><h2>投資組合配置試算</h2></div>
+        <div class="as-of"><span>試算日期</span><strong id="reportDate">—</strong></div>
+      </div>
+
+      <div class="hero-result">
+        <p>預估總月配息（新台幣）</p>
+        <strong id="monthlyIncomeTwd">NT$ 0</strong>
+        <span>預估總年配息 <b id="annualIncomeTwd">NT$ 0</b></span>
+      </div>
+
+      <div class="summary-grid">
+        <article><span>投入金額</span><strong id="summaryAmount">NT$ 0</strong></article>
+        <article><span>商品費用</span><strong id="summaryFee">NT$ 0</strong></article>
+        <article><span>每月管理費</span><strong id="summaryManagementFee">—</strong></article>
+        <article><span>淨投入金額</span><strong id="summaryNet">NT$ 0</strong></article>
+      </div>
+
+      <section class="fund-breakdown">
+        <div class="fund-breakdown-head"><h3>標的配息明細</h3><span>每月現金流規劃</span></div>
+        <div id="portfolioCards" class="portfolio-cards"></div>
+        <div class="portfolio-total"><span>預估總月配息</span><strong id="portfolioTotalMonthly">NT$ 0</strong></div>
+      </section>
+
+      <div class="rate-row"><span>投資組合推估年化配息率</span><strong id="annualRate">0%</strong></div>
+      <p class="disclaimer">各標的依設定比例分配淨投入金額。美元基金申購採臺灣銀行美元即期賣出匯率，美元配息換回新台幣採即期買入匯率。試算僅供規劃參考；實際淨值、匯率、配息及費用依交易與基金公司公告為準。配息可能來自本金，且不代表未來配息。</p>
+    </section>
+
+    <div class="actions no-print">
+      <button id="exportImageBtn" class="secondary" type="button">輸出照片</button>
+      <button id="printBtn" class="primary" type="button">輸出 PDF</button>
+    </div>
+  </main>
+
+  <dialog id="allocationDialog" class="allocation-dialog">
+    <form method="dialog" class="dialog-card allocation-dialog-card">
+      <div class="dialog-head"><div><p class="eyebrow">投資組合設定</p><h2>標的配置與比例</h2></div><button value="cancel" aria-label="關閉">×</button></div>
+      <p class="dialog-note">預設一檔基金，可自由新增或刪除；配置比例合計需為100%。設定後，外部畫面只顯示各標的預估月配息。</p>
+      <div class="allocation-actions"><button id="refreshFundsBtn" class="secondary compact" type="button">更新標的資料</button><button id="addAllocationBtn" class="primary compact" type="button">＋增加標的</button></div>
+      <div id="allocationRows" class="allocation-rows"></div>
+      <div class="allocation-total"><span id="allocationStatus">配置合計 100%</span></div>
+      <p id="fundStatus" class="status-line"></p>
+      <div class="dialog-footer"><button class="primary" value="done">完成配置</button></div>
+    </form>
+  </dialog>
+
+  <script src="vendor/html2canvas.min.js"></script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script type="module" src="app.js?v=22"></script>
+</body>
+</html>
