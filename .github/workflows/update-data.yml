@@ -39,7 +39,7 @@ jobs:
       - name: 建立靜態網站
         run: |
           mkdir _site
-          cp index.html styles.css app.js sw.js manifest.webmanifest .nojekyll _site/
+          cp index.html styles.css two-stage.css app.js sw.js manifest.webmanifest .nojekyll _site/
           cp -R src vendor data icons _site/
       - uses: actions/upload-pages-artifact@v3
         with:

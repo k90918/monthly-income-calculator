@@ -1,6 +1,6 @@
 __pycache__/
 *.pyc
 node_modules/
-calculator.test.js
-ui.test.js
+/calculator.test.js
+/ui.test.js
 .DS_Store

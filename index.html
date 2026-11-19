@@ -9,7 +9,8 @@
   <title>月配息試算器</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=23">
+  <link rel="stylesheet" href="two-stage.css?v=23">
 </head>
 <body>
   <main class="app-shell">
@@ -65,6 +66,28 @@
         <div class="portfolio-total"><span>預估總月配息</span><strong id="portfolioTotalMonthly">NT$ 0</strong></div>
       </section>
 
+      <section id="twoStageSection" class="two-stage-section" hidden>
+        <h3>預估撥回金額</h3>
+        <div class="two-stage-cards">
+          <article class="two-stage-card basic">
+            <p id="twoStageBasicLabel">未加碼｜每單位 0.042</p>
+            <strong>月約 <b id="twoStageBasicMonthly">NT$ 0</b></strong>
+            <span>年約 <b id="twoStageBasicAnnual">NT$ 0</b>　｜　年化率 <b id="twoStageBasicRate">0%</b></span>
+          </article>
+          <article class="two-stage-card bonus">
+            <p id="twoStageBonusLabel">基本 0.042＋加碼 0.100＝每單位 0.142</p>
+            <strong>月約 <b id="twoStageBonusMonthly">NT$ 0</b></strong>
+            <span>年約 <b id="twoStageBonusAnnual">NT$ 0</b>　｜　年化率 <b id="twoStageBonusRate">0%</b></span>
+          </article>
+        </div>
+        <div class="two-stage-rule">
+          <h4>全委帳戶兩段式撥回機制</h4>
+          <p id="twoStagePeriod">—</p>
+          <p>第1重｜基本月撥回：基準日淨值達8，每單位0.042；低於8不撥回。</p>
+          <p>第2重｜檢視前月基準日次一營業日至本月基準日的每日淨值；期間任一日達10.5，且本月基準日淨值達8，加碼0.100／單位。</p>
+        </div>
+      </section>
+
       <div class="rate-row"><span>投資組合推估年化配息率</span><strong id="annualRate">0%</strong></div>
       <p class="disclaimer">各標的依設定比例分配淨投入金額。美元基金申購採臺灣銀行美元即期賣出匯率，美元配息換回新台幣採即期買入匯率。試算僅供規劃參考；實際淨值、匯率、配息及費用依交易與基金公司公告為準。配息可能來自本金，且不代表未來配息。</p>
     </section>
@@ -89,6 +112,6 @@
 
   <script src="vendor/html2canvas.min.js"></script>
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script type="module" src="app.js?v=22"></script>
+  <script type="module" src="app.js?v=23"></script>
 </body>
 </html>

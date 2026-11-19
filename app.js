@@ -2,6 +2,7 @@ import { calculatePortfolio, formatRocDate, formatTwd, formatCurrencyUnit, wanTo
 import { getFeeRate, getMonthlyManagementFee } from './src/feeRules.js?v=22';
 import { createInitialAllocation, equalAllocationPercents, createAllocationRowId } from './src/allocation.js?v=22';
 import { createContainedPdfLayout, createReportPageGroups } from './src/exportLayout.js?v=22';
+import { calculateTwoStageReturn, getTwoStagePeriod } from './src/twoStageReturn.js?v=23';
 
 const FUND_DATA_KEY = 'monthly-income-fixed-funds-v3';
 const FX_KEY = 'monthly-income-bot-fx-v2';
@@ -132,6 +133,27 @@ function setFeeCurrencyOptions(currencies) {
   if (currencies.includes(current)) $('feeCurrency').value = current;
 }
 
+function renderTwoStageReturn(items) {
+  const section = $('twoStageSection');
+  const result = calculateTwoStageReturn({ items, dividendFxRate: numberValue('dividendFxRate') });
+  if (!result) {
+    section.hidden = true;
+    return;
+  }
+  const unitLabel = result.currencies.length === 1 ? result.currencies[0] : '依標的幣別';
+  const period = getTwoStagePeriod(new Date());
+  section.hidden = false;
+  $('twoStageBasicLabel').textContent = `未加碼｜每單位 ${unitLabel} ${result.basicPerUnit.toFixed(3)}`;
+  $('twoStageBonusLabel').textContent = `基本 ${result.basicPerUnit.toFixed(3)}＋加碼 ${result.bonusPerUnit.toFixed(3)}＝每單位 ${unitLabel} ${result.totalBonusPerUnit.toFixed(3)}`;
+  $('twoStageBasicMonthly').textContent = twd(result.basicMonthlyTwd);
+  $('twoStageBasicAnnual').textContent = twd(result.basicAnnualTwd);
+  $('twoStageBasicRate').textContent = `${num(result.basicAnnualRate, 2)}%`;
+  $('twoStageBonusMonthly').textContent = twd(result.bonusMonthlyTwd);
+  $('twoStageBonusAnnual').textContent = twd(result.bonusAnnualTwd);
+  $('twoStageBonusRate').textContent = `${num(result.bonusAnnualRate, 2)}%`;
+  $('twoStagePeriod').textContent = `${apiDateToRoc(period.baseDate)}基準日；加碼觀察 ${apiDateToRoc(period.observationStart)}～${apiDateToRoc(period.observationEnd)}。`;
+}
+
 function updateFeeControls() {
   const isKva = $('feePlan').value === 'KVA';
   $('policyYear').disabled = isKva;
@@ -208,6 +230,7 @@ function calculateAndRender() {
     $('selectedFundSummary').innerHTML = result.items.map(item => `<article class="selected-fund-card"><span>${escapeHtml(item.name)}</span><strong>${twd(item.monthlyIncomeTwd)}</strong><small>預估月配息</small></article>`).join('');
     $('portfolioTotalMonthly').textContent = twd(result.totalMonthlyIncomeTwd);
     $('annualRate').textContent = `${num(result.totalAnnualIncomeTwd / netAmountTwd * 100, 2)}%`;
+    renderTwoStageReturn(result.items);
 
     result.items.forEach((item, index) => {
       const row = document.querySelector(`[data-row-id="${allocations[index].rowId}"]`);
@@ -377,6 +400,7 @@ async function renderCustomerPdfCanvases() {
     }
     if (pageIndex < groups.length - 1) {
       report.querySelector('.portfolio-total')?.remove();
+      report.querySelector('.two-stage-section')?.remove();
       report.querySelector('.rate-row')?.remove();
       report.querySelector('.disclaimer')?.remove();
     }
