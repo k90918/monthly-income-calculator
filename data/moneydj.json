@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-11-25T08:57:09.326926+00:00",
+  "updatedAt": "2026-11-26T08:42:10.461625+00:00",
   "funds": [
     {
       "code": "MSC00012",
       "name": "三商美邦人壽環球365投資帳戶-A1",
-      "dataDate": "2026-11-23",
-      "nav": 9.44,
+      "dataDate": "2026-11-24",
+      "nav": 9.38,
       "dividendDate": "2026-11-10",
       "distribution": 0.142,
       "currency": "USD"
@@ -13,8 +13,8 @@
     {
       "code": "MFD00022",
       "name": "三商美邦人壽環球策略2.0投資帳戶-A1",
-      "dataDate": "2026-11-23",
-      "nav": 9.28,
+      "dataDate": "2026-11-24",
+      "nav": 9.23,
       "dividendDate": "2026-11-10",
       "distribution": 0.042,
       "currency": "USD"
@@ -22,8 +22,8 @@
     {
       "code": "MFK00012",
       "name": "三商美邦人壽鑫收益投資帳戶-A1",
-      "dataDate": "2026-11-23",
-      "nav": 9.23,
+      "dataDate": "2026-11-24",
+      "nav": 9.18,
       "dividendDate": "2026-11-10",
       "distribution": 0.042,
       "currency": "USD"
@@ -31,8 +31,8 @@
     {
       "code": "MDI00012",
       "name": "三商美邦人壽鑫穩健投資帳戶-A1",
-      "dataDate": "2026-11-23",
-      "nav": 10.06,
+      "dataDate": "2026-11-24",
+      "nav": 10.36,
       "dividendDate": "2026-11-10",
       "distribution": 0.142,
       "currency": "TWD"
@@ -40,8 +40,8 @@
     {
       "code": "MSN00110",
       "name": "三商美邦人壽e指穩投資帳戶-A1",
-      "dataDate": "2026-11-23",
-      "nav": 10.34,
+      "dataDate": "2026-11-24",
+      "nav": 10.52,
       "dividendDate": "2026-11-10",
       "distribution": 0.142,
       "currency": "TWD"
